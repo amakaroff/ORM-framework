@@ -5,7 +5,10 @@ import com.makarov.factory.generator.expression.api.RuleConstruction;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * @author Makarov Alexey
+ * @version 1.0
+ */
 public class RuleExpressions implements RuleConstruction {
 
     private List<String> keyWords = new ArrayList<String>() {

@@ -5,10 +5,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
+/**
+ * Annotation for mapping field on column in the table for joining
+ *
+ * @author Makarov Alexey
+ * @version 1.0
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JoinColumn {
 
+    /**
+     * @return column name
+     */
     String name() default "";
 }

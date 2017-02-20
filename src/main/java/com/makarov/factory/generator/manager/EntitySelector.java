@@ -4,9 +4,22 @@ import com.makarov.factory.generator.expression.adder.ExpressionAdder;
 
 import java.util.List;
 
-
+/**
+ * Class for creating "select" query by method name
+ *
+ * @author Makarov Alexey
+ * @version 1.0
+ */
 public class EntitySelector {
 
+    /**
+     * Create "select" sql-query by method name
+     *
+     * @param words     - list words in method name
+     * @param params    - arguments of method
+     * @param tableName - table name
+     * @return sql-query
+     */
     public String getSelectQuery(List<String> words, Object[] params, String tableName) {
         String queryPattern = "SELECT * FROM %s%s%s%s%s";
 

@@ -2,9 +2,9 @@ package com.makarov.factory.generator.impl;
 
 import com.makarov.annotation.repository.Param;
 import com.makarov.factory.generator.api.Generator;
-import com.makarov.factory.generator.manager.EntityDeleter;
 import com.makarov.factory.generator.exception.ErrorNameMethodException;
 import com.makarov.factory.generator.exception.NumberMethodParameterException;
+import com.makarov.factory.generator.manager.EntityDeleter;
 import com.makarov.factory.generator.manager.EntitySaver;
 import com.makarov.factory.generator.manager.EntitySelector;
 import com.makarov.factory.generator.manager.EntityUpdater;
@@ -16,7 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+/**
+ * @author Makarov Alexey
+ * @version 1.0
+ */
 public class QueryGenerator implements Generator {
 
     public String generateQueryFromAnnotation(String query, Method method, Object[] params) {
@@ -54,8 +57,7 @@ public class QueryGenerator implements Generator {
             return deleter.getDeleteQuery(words, params);
         } else if ("find".equals(definedWord)) {
             EntitySelector selector = new EntitySelector();
-            MapperUtils utils = new MapperUtils();
-            return selector.getSelectQuery(words, params, utils.getTableName(method));
+            return selector.getSelectQuery(words, params, MapperUtils.getTableName(method));
         } else if ("update".equals(definedWord)) {
             EntityUpdater updater = new EntityUpdater();
             return updater.getUpdateQuery(words, params);

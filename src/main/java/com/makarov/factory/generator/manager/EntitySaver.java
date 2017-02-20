@@ -6,9 +6,20 @@ import com.makarov.mapper.impl.DBMapper;
 
 import java.lang.reflect.Array;
 
-
+/**
+ * Class for creating "insert" query by method name
+ *
+ * @author Makarov Alexey
+ * @version 1.0
+ */
 public class EntitySaver {
 
+    /**
+     * Create "insert" sql-query by method name
+     *
+     * @param params - stored object
+     * @return sql-query
+     */
     public String getSaveQuery(Object[] params) {
         Object entity = params[0];
         Class<?> clazz = entity.getClass();

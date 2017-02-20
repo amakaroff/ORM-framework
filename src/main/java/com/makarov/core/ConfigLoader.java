@@ -8,11 +8,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Class for loading configuration from property file
+ *
+ * @author Makarov Alexey
+ * @version 1.0
+ */
 public class ConfigLoader {
 
     private static Map<String, String> resources;
 
-    public static Map<String, String> getResources() {
+
+    /**
+     * Get mapping properties
+     *
+     * @return property map
+     */
+    static Map<String, String> getResources() {
         if (resources == null) {
             resources = new HashMap<>();
             load();
@@ -21,10 +33,20 @@ public class ConfigLoader {
         return resources;
     }
 
-    public static String getResource(String key) {
+
+    /**
+     * Get property by key-name
+     *
+     * @param key - property name
+     * @return property
+     */
+    static String getResource(String key) {
         return getResources().get(key);
     }
 
+    /**
+     * Load configuration
+     */
     private static void load() {
         Properties properties = new Properties();
 
@@ -42,6 +64,12 @@ public class ConfigLoader {
         mapProperties(properties);
     }
 
+
+    /**
+     * Mapping property from file
+     *
+     * @param properties - properties
+     */
     private static void mapProperties(Properties properties) {
         resources.put("driver", properties.getProperty("driver"));
         resources.put("url", properties.getProperty("url"));
