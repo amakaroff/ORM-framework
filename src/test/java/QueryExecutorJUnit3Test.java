@@ -1,5 +1,6 @@
 import com.makarov.executor.QueryExecutor;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import resources.Product;
 import resources.Seller;
 
@@ -61,7 +62,7 @@ public class QueryExecutorJUnit3Test extends TestCase {
         Product product6 = new Product();
         product6.setId(6);
         product6.setName("horse");
-        product6.setSeller(null);
+        product6.setSeller(seller3);
         products.add(product6);
 
         Product product7 = new Product();
@@ -78,21 +79,26 @@ public class QueryExecutorJUnit3Test extends TestCase {
 
         for (Product product : products) {
             QueryExecutor.save(product);
+            Assert.assertNotNull(QueryExecutor.findOne("SELECT * FROM product WHERE id=" + product.getId(), Product.class));
         }
     }
 
     public void testSelectObject() {
-        QueryExecutor.findOne("SELECT * FROM seller WHERE s_id=1", Seller.class);
-        QueryExecutor.findOne("SELECT * FROM seller WHERE s_id=2", Seller.class);
-        QueryExecutor.findOne("SELECT * FROM seller WHERE s_id=3", Seller.class);
+        Assert.assertNotNull(QueryExecutor.findOne("SELECT * FROM seller WHERE s_id=1", Seller.class));
+        Assert.assertNotNull(QueryExecutor.findOne("SELECT * FROM seller WHERE s_id=2", Seller.class));
+        Assert.assertNotNull(QueryExecutor.findOne("SELECT * FROM seller WHERE s_id=3", Seller.class));
 
         for (Product product : QueryExecutor.findSome("SELECT * FROM products", Product.class)) {
-            product.getSeller();
+            Assert.assertNotNull(product.getSeller());
         }
     }
 
     public void testExecuteMethod() {
-        QueryExecutor.executeQuery("DELETE FROM products WHERE id=2");
+        QueryExecutor.executeQuery("DELETE FROM products WHERE id=3");
+        Assert.assertNull(QueryExecutor.findOne("SELECT * FROM products WHERE id=3", Product.class));
         QueryExecutor.executeQuery("UPDATE products SET name='magic' WHERE id=2");
+        Product product = QueryExecutor.findOne("SELECT * FROM products WHERE id=2", Product.class);
+        Assert.assertNotNull(product);
+        Assert.assertEquals("magic", product.getName());
     }
 }

@@ -12,4 +12,8 @@ public class QueryExecuteException extends RuntimeException {
     public QueryExecuteException(String message) {
         super(message);
     }
+
+    public QueryExecuteException(Throwable cause) {
+        super(cause);
+    }
 }

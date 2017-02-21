@@ -51,7 +51,7 @@ public class QueryExecutor {
             }
 
         } catch (SQLException exception) {
-            throw new QueryExecuteException(exception.getMessage());
+            throw new QueryExecuteException(exception);
         }
     }
 
@@ -73,7 +73,7 @@ public class QueryExecutor {
             }
             return list;
         } catch (SQLException exception) {
-            throw new QueryExecuteException(exception.getMessage());
+            throw new QueryExecuteException(exception);
         }
     }
 
@@ -88,7 +88,7 @@ public class QueryExecutor {
              Statement statement = connection.createStatement()) {
             statement.execute(query);
         } catch (SQLException exception) {
-            throw new QueryExecuteException(exception.getMessage());
+            throw new QueryExecuteException(exception);
         }
     }
 }

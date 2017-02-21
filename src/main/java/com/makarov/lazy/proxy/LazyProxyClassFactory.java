@@ -96,7 +96,7 @@ public class LazyProxyClassFactory {
             }
             return null;
         } catch (SQLException exception) {
-            throw new QueryExecuteException(exception.getMessage());
+            throw new QueryExecuteException(exception);
         }
     }
 }

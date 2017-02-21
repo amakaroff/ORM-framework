@@ -1,6 +1,7 @@
 import com.makarov.executor.QueryExecutor;
 import com.makarov.factory.RepositoriesFactory;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import resources.Product;
 import resources.Seller;
 import resources.repository.ProductRepository;
@@ -67,7 +68,7 @@ public class DynamicRepositoryJUnit3Test extends TestCase {
         Product product6 = new Product();
         product6.setId(6);
         product6.setName("horse");
-        product6.setSeller(null);
+        product6.setSeller(seller3);
         products.add(product6);
 
         Product product7 = new Product();
@@ -83,6 +84,9 @@ public class DynamicRepositoryJUnit3Test extends TestCase {
         products.add(product8);
 
         productRepository.save(products);
+        for (int i = 1; i < 9; i++) {
+            Assert.assertNotNull(productRepository.findOneById(i));
+        }
 
         Seller seller4 = new Seller();
         seller4.setSid(5);
@@ -97,35 +101,43 @@ public class DynamicRepositoryJUnit3Test extends TestCase {
         sellers[1] = seller5;
 
         sellerRepository.save(sellers);
+        Assert.assertNotNull(sellerRepository.findOneByS_name("ivan"));
+        Assert.assertNotNull(sellerRepository.findOneByS_name("vova"));
     }
 
     public void testAnnotationQuery() {
-        productRepository.selectOne(1);
+        Assert.assertNotNull(productRepository.selectOne(1));
         productRepository.deleteOne("dog");
+        Assert.assertNull(productRepository.selectOne(3));
 
-        sellerRepository.getSeller(1, "kolya");
+        Assert.assertNotNull(sellerRepository.getSeller(1, "kolya"));
         sellerRepository.updateTable(2, 4);
+        Assert.assertEquals(4, sellerRepository.findOneByS_name("kolya").getSid());
     }
 
     public void testFind() {
-        productRepository.findOneById(1);
+        Assert.assertNotNull(productRepository.findOneById(1));
         for (Product product : productRepository.findAll()) {
-            product.getSeller();
+            Assert.assertNotNull(product.getSeller());
         }
 
-        sellerRepository.findOneByS_name("ivan");
+        Assert.assertNotNull(sellerRepository.findOneByS_name("ivan"));
         for (Seller seller : sellerRepository.findAll()) {
-            seller.getProducts();
+            Assert.assertNotNull(seller.getProducts());
         }
     }
 
     public void testDelete() {
         productRepository.deleteFromProductsOneByName("cat");
+        Assert.assertNull(productRepository.selectOne(8));
         sellerRepository.deleteFromSellersByS_id(1);
+        Assert.assertNull(sellerRepository.findOneByS_name("vasya"));
     }
 
     public void testUpdate() {
         productRepository.updateProductsSetNameById("close", 5);
+        Assert.assertEquals("close", productRepository.findOneById(5).getName());
         sellerRepository.updateSellersSetS_nameByS_id("leha", 2);
+        Assert.assertEquals("leha", sellerRepository.getSeller(2, "leha").getSname());
     }
 }

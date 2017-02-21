@@ -158,7 +158,7 @@ public class DBMapper implements Mapper {
                     }
                 }
             } catch (SQLException exception) {
-                throw new QueryExecuteException(exception.getMessage());
+                throw new QueryExecuteException(exception);
             }
         }
 

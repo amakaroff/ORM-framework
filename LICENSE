@@ -1,80 +1,79 @@
                                 ORM-framework
                           version 1.0, February 2017
                                 Documentation
-    1.  Необходимо создать property file persistence.properties
-        со следующим наполнением:
+    1.  It is necessary to create property file persistence.properties
+        with following content:
 
         driver="database driver"
         login="database login"
         password="database password"
         url="url database"
 
-    2.  Для  отображения  java-сущностей  в  базе  данных  её  необходимо   пометить
-        аннотацией   @Table,  и   внутри  отметить    необходимые  поля   аннотацией
-        @Column  указав  внутри  них  соответствующие  таблицы и поля в базе данных.
-        Для  соединения  внешних ключей с первичными  нужно  использовать  аннотации
-        @OneToOne, @OneToMany, @ManyToOne и @JoinColumn.
+    2.  To display java-entity in the database you should mark it with an annotation
+       	@Table, also necessary fields of the entity should be marked with an annotation
+        @Column. Appropriate tables and fields of the database should be specified inside
+        annotations @Table and @Column. Use annotations @OneToOne, @OneToMany, @ManyToOne
+        and @JoinColumn to connect foreign keys with primary keys.
+   
+    3.  Annotations @OneToOne, @OneToMany and @ManyToOne specify ways of loading
+	    given entity from the database:
+        FetchType.LAZY - for lazy initialization;
+	    FetchType.EAGER - for eager initialization.
+	    To join the current entity with another by some field you must specify this field
+	    in the annotations.
 
-    3.  В аннотациях @OneToOne, @OneToMany и @ManyToOne  указываем способ  подгрузки
-        данной сущности из базы данных:
-        FetchType.LAZY - для ленивой и FetchType.EAGER - для жадной
-        В некоторых аннотациях нужно указать поля  другой  сущности с которыми будет
-        соединяться текущая сущность.
+    4.  Obtaining database connection without entity mapping is done by getConnection() method 
+	    from DataSourceLoader class.
 
-    4.  Получение соединения с базой данных без отображения сущностей осуществляется
-        из класса DataSourceLoader с помощью метода getConnection().
+    5.  Basic work with database tables is done in the class
+        QueryExecutor using methods save, findOne, findSome and executeQuery.
 
-    5.  Простейшая   работа  с  таблицами   базы  данных  осуществляется  из  класса
-        QueryExecutor при помощи методов save, findOne, findSome и executeQuery.
+    6.  Dynamic interface creating:
+        Method implement from RepositoriesFactory class is used to create dynamic interfaces (interface
+        is passed to the method).
+        Method signature in the interface is marked by @Query annotation, where query is actually placed. 
+	    The query specifies passed parameters in the form of {parameter name}.
+	    Also you can mark the appropriate parameter of the method with annotation @Param with
+	    the name of the corresponding parameter.
 
-    6.  Создание динамических интерфейсов
-        В интерфейсе  сигнатуру  метода  необходимо  пометить аннотацией @Query куда
-        помещяется запрос. В запросе можно  указывать  передаваемые параметры в виде
-        {название параметра} и и соответствующий параметр метода поменять аннотацией
-        @Param куда записывать соответствующее название параметра.
-
-        Например:
+        For example:
         @Query (SELECT * FROM entity WHERE id={id} AND name={name})
         Entity selectEntity(@Param("id") int id, @Param("name") String name);
 
-        Так-же    имплементация    интерфеса   позволяет   генерировать   sql-запросы
-        по названию метода составленного из ключевых слов.
+        Also interface implementation allows to generate sql-query
+        by method name, if the name consists of the key words.
 
-        Список ключевых слов:
-        find, save, delete,  update,  From,  And,  Or, By,  Between, Set, Left, Right,
-        Inner, Join, On, OrderBy, Asc, Desc.
+        List of key words:
+        find, save, delete, update, From,  And, Or, By, Between, Set, Left, Right, Inner, Join, On,
+        OrderBy, Asc, Desc.
 
-        Ключевое  слово  "save"  требует  в  парметр  сохраняемую  сущность, коллекцию
-        сущностей или массив сущностей.
-        Ключевое  слово  "delete"  позволяет  принимать  в параметр удаляемую сущность,
-        коллекцию сущностей или массив сущностей.
-        Ключевое слово "update" требует после себя соответствующее название таблицы.
-        Ключевое слово "From" требует после себя соответствующее название таблицы.
-        Ключевое слово "By" требует после себя соответствующее название поля в таблице,
-        а так-же одно значение параметра.
-        Ключевое слово "Between"  требует  после  себя  соответствующее  название  поля
-        в таблице, а так-же два значения параметра
-        Ключевое  слово  "Set"  требует  после   себя   соответствующее  название  поля
-        в таблице, а так-же одно значение параметра.
-        Ключевое  слово  "OrderBy"  требует  после  себя  соответствующее название поля
-        в таблице.
-        Ключевое слово "Join" требует после себя соответствующее название таблицы.
-        Ключевое слово "On" требует после  себя соответствующее название поля в таблице.
-        Поля в таблицах должны иметь одинаковое название.
+        Key word "save" requires persistent entity, collection of entities or array of entities as parameter.
+        Key word "delete" requires deleting entity, collection of entities or array of entities as parameter.
+        Key word "update" requires appropriate table name after itself.
+        Key word "From" requires appropriate table name after itself.
+        Key word "By" requires appropriate field name in the table and one value of the parameter after itself.
+        Key word "Between" requires appropriate field name in the table and two parameter values after itself.
+        Key word "Set" requires appropriate field name in the table and one parameter value after itself.
+        Key word "OrderBy" requires appropriate field name in the table after itself.
+        Key word "Join" requires appropriate table name after itself.
+        Key word "On" requires appropriate field name in the table after itself.
+        Fields in the tables must have equal names.
 
-        Напимер:
+        For example:
         Entity findById(int id);
-        Эквивалентно запросу
+        Is similar to query
         SELECT * FROM entity WHERE id=id;
 
         void deleteFromEntityByName(String name);
-        Эквивалентно запросу
+        Is similar to query
         DELETE FROM entity WHERE name=name;
 
         void save(List<Entity> name);
-        Эквивалентно запросу
-        INSERT INTO entity VALUES (данные);
+        Is similar to query
+        INSERT INTO entity VALUES (entity date 1);
+        ...
+        INSERT INTO entity VALUES (entity date n);
 
         void updateEntitySetIdByName(int id, String name);
-        Эквивалентно запросу
-        DELETE FROM entity WHERE name=name;
+        Is similar to query
+        UPDATE entity SET name=name WHERE name=name;
